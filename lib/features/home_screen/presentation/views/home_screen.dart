@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Text(
                               "My News",
-                              style: font20Medium(),
+                              style: font18Medium(),
                             ),
                             InkWell(
                                 onTap: () {
@@ -57,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                                 },
                                 child: Icon(
                                   Icons.search,
-                                  color: controller.appTheme.textColor(),
+                                  color: controller.themeController.getAppTheme().textColor(),
                                 )),
                           ],
                         ),
@@ -77,13 +76,20 @@ class HomeScreen extends StatelessWidget {
                                             onTap: () {
                                               controller.onTapCategories(index);
                                             },
-                                            text: CommonLists
-                                                .newsApiCategories[index]),
+                                            text: convertFirstCapital(
+                                                string: CommonLists
+                                                    .newsApiCategories[index])),
                                       ))),
                         )),
                         if (controller.topHeadingsList.isNotEmpty) ...[
                           sizedBoxH(1.5),
-                          TopHeadlinesSection(list: controller.topHeadingsList),
+                          TopHeadlinesSection(list: controller.topHeadingsList,function: (NewsArticleModel model){
+                             Get.toNamed(Routes.articleDetailsScreen,
+                                            arguments: model)
+                                        ?.then((v) {
+                                      controller.refreshApi();
+                                    });
+                          },),
                           sizedBoxH(1.5),
                         ],
                         if (controller.popularNews.isNotEmpty) ...[
@@ -92,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Popular News",
-                                style: font18Medium(),
+                                style: font16Medium(),
                               ),
                               InkWell(
                                 onTap: () => Get.toNamed(Routes.newsListScreen),
@@ -115,7 +121,12 @@ class HomeScreen extends StatelessWidget {
                                     controller.popularNews[index];
                                 return articleTile(
                                   fun: () {
-                                    pushToArticleScreen(model: model);
+                                    // pushToArticleScreen(model: model);
+                                    Get.toNamed(Routes.articleDetailsScreen,
+                                            arguments: model)
+                                        ?.then((v) {
+                                      controller.refreshApi();
+                                    });
                                   },
                                   primaryColor:
                                       controller.appTheme.primaryColor(),
@@ -151,24 +162,23 @@ class HomeScreen extends StatelessWidget {
 
 class TopHeadlinesSection extends StatelessWidget {
   final List<NewsArticleModel> list;
-  const TopHeadlinesSection({super.key, required this.list});
+  final Function(NewsArticleModel model) function;
+  const TopHeadlinesSection({super.key, required this.list,required this.function});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         "Top Headlines",
-        style: font18Medium(),
+        style: font16Medium(),
       ),
       sizedBoxH(1.8),
       CarouselSlider.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
             InkWell(
-          onTap: () {
-            pushToArticleScreen(model: list[itemIndex]);
-            // Get.toNamed(Routes.articleDetailsScreen,
-            //     arguments: list[itemIndex]);
+          onTap: (){
+            function(list[itemIndex]);
           },
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
@@ -184,7 +194,7 @@ class TopHeadlinesSection extends StatelessWidget {
                   color: Colors.white,
                   child: CachedNetworkImage(
                     // imageBuilder: ()=>,
-                    imageUrl: list[itemIndex].urlToImage ?? '',
+                    imageUrl: list[itemIndex].urlToImage ?? 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D',
                     fit: BoxFit.fill,
                     errorWidget: (context, url, error) => Icon(
                       Icons.article,
@@ -199,12 +209,13 @@ class TopHeadlinesSection extends StatelessWidget {
                     decoration: BoxDecoration(gradient: commonGradient()),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
+                              horizontal: 20, vertical: 15)
+                          .copyWith(left: 10),
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
                           list[itemIndex].title ?? '',
-                          style: font18Medium(textColor: Colors.white),
+                          style: font16Medium(textColor: Colors.white),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -218,7 +229,7 @@ class TopHeadlinesSection extends StatelessWidget {
         options: CarouselOptions(
             onPageChanged: (val, _) {},
             viewportFraction: 1,
-            padEnds: true,
+            padEnds: false,
             pageSnapping: true,
             autoPlay: true,
             autoPlayAnimationDuration: const Duration(

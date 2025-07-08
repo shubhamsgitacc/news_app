@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_app/app/theme/app_theme.dart';
+import 'package:news_app/app/theme/dark_theme.dart';
+import 'package:news_app/app/theme/light_theme.dart';
 import 'package:news_app/app/theme/theme_controller.dart';
 import 'package:news_app/core/common_models/article_model.dart';
 import 'package:news_app/core/text_styles/text_style.dart';
@@ -113,8 +115,7 @@ Gradient commonGradient() => LinearGradient(colors: <Color>[
       1
     ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
 
-pushToArticleScreen({required NewsArticleModel model}) {
-  print('object');
+pushToArticleScreen({required NewsArticleModel model}) async {
   Get.toNamed(Routes.articleDetailsScreen, arguments: model);
 }
 
@@ -154,14 +155,14 @@ Widget articleTile({
               children: [
                 Text(
                   model.title ?? '',
-                  style: font18Medium(),
+                  style: font14Medium(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 sizedBoxH(.6),
                 Text(
                   ' $time',
-                  style: font16Medium(),
+                  style: font12Medium(),
                 ),
               ],
             ))
@@ -169,3 +170,21 @@ Widget articleTile({
         ),
       ),
     );
+
+String convertFirstCapital({required String string}) {
+  String str = string;
+  return str.replaceFirst(string[0], string[0].toUpperCase());
+}
+
+Color getInvertColor(){
+  ThemeController controller = Get.find<ThemeController>();
+  DarkTheme d = DarkTheme();
+  LightTheme l = LightTheme();
+ return controller.isDarkTheme.value? l.backgroundColor():d.backgroundColor();
+}
+Color getInvertTextColor(){
+  ThemeController controller = Get.find<ThemeController>();
+  DarkTheme d = DarkTheme();
+  LightTheme l = LightTheme();
+ return !controller.isDarkTheme.value? d.textColor():l.textColor();
+}

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:news_app/app/routes/app_routes.dart';
 import 'package:news_app/app/theme/theme_controller.dart';
 import 'package:news_app/core/utils/size_utils.dart';
-import 'package:news_app/features/dashboard/presentation/views/dashboard_screen.dart';
 import 'package:news_app/features/splash_screen/presentation/binder/splash_screen_binder.dart';
 
 void main() {

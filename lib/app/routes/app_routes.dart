@@ -10,7 +10,7 @@ import 'package:news_app/features/home_screen/presentation/binder/home_screen_bi
 import 'package:news_app/features/home_screen/presentation/views/home_screen.dart';
 import 'package:news_app/features/news_list_screen/presentation/binder/news_list_binder.dart';
 import 'package:news_app/features/news_list_screen/presentation/views/news_list_screen.dart';
-import 'package:news_app/features/search_screen/presentation/binder/news_list_binder.dart';
+import 'package:news_app/features/search_screen/presentation/binder/search_screen_binder.dart';
 import 'package:news_app/features/search_screen/presentation/views/search_screen.dart';
 import 'package:news_app/features/setting_screen/presentation/binder/setting_screen_binder.dart';
 import 'package:news_app/features/setting_screen/presentation/views/setting_screen.dart';

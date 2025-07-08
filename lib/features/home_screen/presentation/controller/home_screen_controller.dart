@@ -20,13 +20,23 @@ class HomeScreenController extends GetxController {
   @override
   onInit() {
     super.onInit();
+    appTheme = themeController.getAppTheme();
+    refreshApi();
+    // getTopHeading(
+    //     category: CommonLists.newsApiCategories[selectedCategory.value]);
+    // popularNews = [];
+    // topHeadingsList = [];
+  }
+
+  refreshApi() {
     getTopHeading(
         category: CommonLists.newsApiCategories[selectedCategory.value]);
     popularNews = [];
     topHeadingsList = [];
+    currentPage.value = 1;
   }
-
-  AppTheme appTheme = ThemeController().getAppTheme();
+  ThemeController themeController = Get.find<ThemeController>();
+ late AppTheme appTheme;
   ScrollController controller = ScrollController();
   String getTime({required String time}) {
     String tm = '';
